@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tofimotia-postgres
+    environment:
+      POSTGRES_DB: tofimotia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: eric1212
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tofimotia-network
+
+  app:
+    build: .
+    container_name: tofimotia-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tofimotia
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: eric1212
+    networks:
+      - tofimotia-network
+
+volumes:
+  postgres_data:
+
+networks:
+  tofimotia-network:
+    driver: bridge

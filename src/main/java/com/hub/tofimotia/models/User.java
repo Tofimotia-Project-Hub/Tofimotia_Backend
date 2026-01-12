@@ -21,6 +21,15 @@ public class User extends BaseEntity{
     @Column(name ="password_hash",nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
