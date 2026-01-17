@@ -1,9 +1,6 @@
 package com.hub.tofimotia.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,12 +12,19 @@ import java.math.BigDecimal;
 @Table(name = "payments")
 public class Payment extends BaseEntity {
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "booking_id")
     private Bookings booking;
 
+    @Column(name = "amount")
     private BigDecimal amount;
+    
+    @Column(name = "status")
     private String status;
-    private String provider;
+    
+    @Column(name = "payment_method")
+    private String paymentMethod;
+    
+    @Column(name = "transaction_id")
     private String transactionId;
 }

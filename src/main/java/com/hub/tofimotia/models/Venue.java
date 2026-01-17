@@ -16,26 +16,36 @@ import java.util.Map;
 @Table(name = "venues")
 public class Venue extends BaseEntity{
     @ManyToOne
-    @JoinColumn(name = "vendor_id",nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User vendor;
 
+    @Column(name = "name")
     private String name;
+    
+    @Column(name = "description")
+    private String description;
+    
+    @Column(name = "location")
     private String location;
-    private int capacity;
+    
+    @Column(name = "capacity")
+    private Integer capacity;
 
-    @Column(name ="price_per_hour")
+    @Column(name = "price_per_hour")
     private BigDecimal pricePerHour;
 
     @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "amenities", columnDefinition = "jsonb")
     private Map<String,Object> amenities;
 
     @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "availability", columnDefinition = "jsonb")
     private Map<String,Object> availability;
 
     @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "images", columnDefinition = "jsonb")
     private List<String> images;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 }

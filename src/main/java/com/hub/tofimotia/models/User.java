@@ -15,25 +15,32 @@ import java.util.Map;
 @Table(name = "users")
 public class User extends BaseEntity{
 
-    @Column(nullable = false,unique = true)
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name ="password_hash",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
     @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "profile_data", columnDefinition = "jsonb")
     private Map<String,Object> profileData;
 }

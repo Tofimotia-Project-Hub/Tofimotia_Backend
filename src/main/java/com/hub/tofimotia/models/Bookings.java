@@ -18,15 +18,22 @@ public class Bookings extends BaseEntity{
     private Venue venue;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     private User customer;
 
+    @Column(name = "start_time")
     private LocalDateTime startDateTime;
+    
+    @Column(name = "end_time")
     private LocalDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private BookingStatus status;
 
+    @Column(name = "total_amount")
     private BigDecimal totalAmount;
-    private String paymentStatus;
+    
+    @Column(name = "special_requests")
+    private String specialRequests;
 }

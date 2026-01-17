@@ -1,9 +1,6 @@
 package com.hub.tofimotia.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,10 +10,21 @@ import lombok.EqualsAndHashCode;
 @Table(name = "reviews")
 public class Review extends BaseEntity {
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "booking_id")
     private Bookings booking;
 
-   private int rating;
-   private String comment;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "venue_id")
+    private Venue venue;
+
+    @Column(name = "rating")
+    private Integer rating;
+    
+    @Column(name = "comment")
+    private String comment;
 }
