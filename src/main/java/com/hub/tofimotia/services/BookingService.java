@@ -73,7 +73,6 @@ public class BookingService {
         booking.setEndDateTime(request.getEndDateTime());
         booking.setStatus(BookingStatus.PENDING);
         booking.setTotalAmount(totalAmount);
-        booking.setPaymentStatus("PENDING");
 
         return bookingRepository.save(booking);
     }
