@@ -18,4 +18,4 @@ RUN ./mvnw clean package -DskipTests
 
 # Run the application
 EXPOSE 8080
-CMD ["java", "-jar", "target/Tofimotia-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/Tofimotia-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
