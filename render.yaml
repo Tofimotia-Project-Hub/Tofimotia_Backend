@@ -4,6 +4,9 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: ""
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -15,4 +18,13 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      - key: PORT
+        value: "8080"
     healthCheckPath: /actuator/health
+    
+databases:
+  - name: tofimotia-db
+    databaseName: tofimotia
+    user: tofimotia_user
+    plan: free
+    region: oregon
