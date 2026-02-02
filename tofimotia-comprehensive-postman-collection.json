@@ -1,0 +1,1219 @@
+{
+  "info": {
+    "name": "Tofimotia API - Venue Booking Platform",
+    "description": "Complete API documentation for Tofimotia - A comprehensive venue booking platform that allows users to discover, book, and manage venue reservations.\n\n## Features:\n- User registration and authentication with JWT tokens\n- Role-based access control (USER, VENDOR, ADMIN)\n- Venue management and search capabilities\n- Booking system with availability checking\n- Real-time booking status updates\n\n## Base URL: https://tofimotia-backend.onrender.com\n\n## Authentication:\nMost endpoints require JWT authentication. After login, the token is automatically saved and used for subsequent requests.\n\n## Getting Started:\n1. Register a new user account\n2. Login to get JWT token\n3. Explore venues and create bookings\n4. Manage your bookings and profile",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://tofimotia-backend.onrender.com",
+      "type": "string",
+      "description": "Base URL for the Tofimotia API"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT authentication token"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string",
+      "description": "Current user ID"
+    },
+    {
+      "key": "venue_id",
+      "value": "1",
+      "type": "string",
+      "description": "Sample venue ID for testing"
+    },
+    {
+      "key": "booking_id",
+      "value": "",
+      "type": "string",
+      "description": "Sample booking ID for testing"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "description": "User registration and authentication endpoints",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"role\": \"USER\",\n  \"profileData\": {\n    \"preferences\": \"outdoor venues\",\n    \"company\": \"Tech Corp\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a new user account. Available roles: USER, VENDOR, ADMIN"
+          },
+          "response": [
+            {
+              "name": "✅ Successful Registration",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"role\": \"USER\",\n  \"profileData\": {\n    \"preferences\": \"outdoor venues\",\n    \"company\": \"Tech Corp\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY5NDYzMjg3LCJleHAiOjE3Njk1NDk2ODd9.wjh2bpzi4k77eUKw_9EjCWZiof1Wlh-HFQjQ5i1Yb6o\",\n    \"type\": \"Bearer\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": \"USER\"\n  }\n}"
+            },
+            {
+              "name": "❌ Email Already Exists",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"existing@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"role\": \"USER\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Email already exists\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Register Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"vendor@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"phoneNumber\": \"+1234567891\",\n  \"role\": \"VENDOR\",\n  \"profileData\": {\n    \"businessName\": \"Premium Venues LLC\",\n    \"businessLicense\": \"BL123456\",\n    \"description\": \"Professional venue management company\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a vendor account to manage venues"
+          },
+          "response": [
+            {
+              "name": "✅ Vendor Registration Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"vendor@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"phoneNumber\": \"+1234567891\",\n  \"role\": \"VENDOR\",\n  \"profileData\": {\n    \"businessName\": \"Premium Venues LLC\",\n    \"businessLicense\": \"BL123456\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2ZW5kb3JAZXhhbXBsZS5jb20iLCJpYXQiOjE3Njk0NjMyODcsImV4cCI6MTc2OTU0OTY4N30.abc123def456ghi789\",\n    \"type\": \"Bearer\",\n    \"email\": \"vendor@example.com\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"role\": \"VENDOR\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('jwt_token', response.data.token);",
+                  "        console.log('JWT token saved to collection variable');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Authenticate user and receive JWT token for subsequent requests"
+          },
+          "response": [
+            {
+              "name": "✅ Successful Login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY5NDYzNDE4LCJleHAiOjE3Njk1NDk4MTh9.KHd9dFxL5H0ehrOrroqwtj2paBTI8qWNcKh5iH_TliA\",\n    \"type\": \"Bearer\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": \"USER\"\n  }\n}"
+            },
+            {
+              "name": "❌ Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid credentials\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "👤 User Management",
+      "description": "User profile and account management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "profile"]
+            },
+            "description": "Get current authenticated user's profile information"
+          },
+          "response": [
+            {
+              "name": "✅ Profile Retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/users/profile",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "users", "profile"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Profile retrieved successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"createdAt\": \"2026-01-26T21:34:45.544822\",\n    \"updatedAt\": \"2026-01-26T21:34:45.544905\",\n    \"username\": \"user@example.com\",\n    \"email\": \"user@example.com\",\n    \"password\": null,\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phoneNumber\": \"+1234567890\",\n    \"role\": \"USER\",\n    \"profileData\": {\n      \"preferences\": \"outdoor venues\",\n      \"company\": \"Tech Corp\"\n    }\n  }\n}"
+            },
+            {
+              "name": "❌ Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/users/profile",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "users", "profile"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Unauthorized access\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "🏢 Venues",
+      "description": "Venue discovery, management, and search functionality",
+      "item": [
+        {
+          "name": "Get All Venues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues"]
+            },
+            "description": "Retrieve all available venues (public endpoint)"
+          },
+          "response": [
+            {
+              "name": "✅ Venues Retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Venues retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"createdAt\": \"2026-01-26T20:00:00\",\n      \"updatedAt\": \"2026-01-26T20:00:00\",\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\",\n      \"capacity\": 150,\n      \"pricePerHour\": 250.00,\n      \"amenities\": {\n        \"wifi\": true,\n        \"projector\": true,\n        \"airConditioning\": true,\n        \"parking\": true,\n        \"catering\": false\n      },\n      \"availability\": {\n        \"monday\": \"09:00-18:00\",\n        \"tuesday\": \"09:00-18:00\",\n        \"wednesday\": \"09:00-18:00\",\n        \"thursday\": \"09:00-18:00\",\n        \"friday\": \"09:00-18:00\",\n        \"saturday\": \"10:00-16:00\",\n        \"sunday\": \"closed\"\n      },\n      \"images\": [\n        \"https://example.com/venue1.jpg\",\n        \"https://example.com/venue2.jpg\"\n      ],\n      \"vendor\": {\n        \"id\": 2,\n        \"firstName\": \"Jane\",\n        \"lastName\": \"Smith\",\n        \"email\": \"vendor@example.com\"\n      }\n    },\n    {\n      \"id\": 2,\n      \"createdAt\": \"2026-01-26T20:00:00\",\n      \"updatedAt\": \"2026-01-26T20:00:00\",\n      \"name\": \"Rooftop Event Space\",\n      \"location\": \"456 Downtown Ave, Los Angeles, CA\",\n      \"capacity\": 80,\n      \"pricePerHour\": 180.00,\n      \"amenities\": {\n        \"wifi\": true,\n        \"projector\": false,\n        \"airConditioning\": true,\n        \"parking\": false,\n        \"catering\": true,\n        \"outdoorSpace\": true\n      },\n      \"availability\": {\n        \"monday\": \"10:00-22:00\",\n        \"tuesday\": \"10:00-22:00\",\n        \"wednesday\": \"10:00-22:00\",\n        \"thursday\": \"10:00-22:00\",\n        \"friday\": \"10:00-24:00\",\n        \"saturday\": \"10:00-24:00\",\n        \"sunday\": \"12:00-20:00\"\n      },\n      \"images\": [\n        \"https://example.com/rooftop1.jpg\",\n        \"https://example.com/rooftop2.jpg\"\n      ],\n      \"vendor\": {\n        \"id\": 3,\n        \"firstName\": \"Mike\",\n        \"lastName\": \"Johnson\",\n        \"email\": \"mike@venues.com\"\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Venue by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues/{{venue_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues", "{{venue_id}}"]
+            },
+            "description": "Get detailed information about a specific venue"
+          },
+          "response": [
+            {
+              "name": "✅ Venue Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues", "1"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Venue found\",\n  \"data\": {\n    \"id\": 1,\n    \"createdAt\": \"2026-01-26T20:00:00\",\n    \"updatedAt\": \"2026-01-26T20:00:00\",\n    \"name\": \"Grand Conference Hall\",\n    \"location\": \"123 Business District, New York, NY\",\n    \"capacity\": 150,\n    \"pricePerHour\": 250.00,\n    \"amenities\": {\n      \"wifi\": true,\n      \"projector\": true,\n      \"airConditioning\": true,\n      \"parking\": true,\n      \"catering\": false\n    },\n    \"availability\": {\n      \"monday\": \"09:00-18:00\",\n      \"tuesday\": \"09:00-18:00\",\n      \"wednesday\": \"09:00-18:00\",\n      \"thursday\": \"09:00-18:00\",\n      \"friday\": \"09:00-18:00\",\n      \"saturday\": \"10:00-16:00\",\n      \"sunday\": \"closed\"\n    },\n    \"images\": [\n      \"https://example.com/venue1.jpg\",\n      \"https://example.com/venue2.jpg\"\n    ],\n    \"vendor\": {\n      \"id\": 2,\n      \"firstName\": \"Jane\",\n      \"lastName\": \"Smith\",\n      \"email\": \"vendor@example.com\",\n      \"profileData\": {\n        \"businessName\": \"Premium Venues LLC\",\n        \"businessLicense\": \"BL123456\"\n      }\n    }\n  }\n}"
+            },
+            {
+              "name": "❌ Venue Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues/999",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues", "999"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Venue not found\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Search Venues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues/search?location=New York&minCapacity=50&maxCapacity=200&minPrice=100&maxPrice=500",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues", "search"],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "New York",
+                  "description": "Filter by location"
+                },
+                {
+                  "key": "minCapacity",
+                  "value": "50",
+                  "description": "Minimum venue capacity"
+                },
+                {
+                  "key": "maxCapacity",
+                  "value": "200",
+                  "description": "Maximum venue capacity"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "100",
+                  "description": "Minimum price per hour"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "500",
+                  "description": "Maximum price per hour"
+                }
+              ]
+            },
+            "description": "Search venues with various filters"
+          },
+          "response": [
+            {
+              "name": "✅ Search Results",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues/search?location=New York&minCapacity=50&maxCapacity=200",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues", "search"],
+                  "query": [
+                    {
+                      "key": "location",
+                      "value": "New York"
+                    },
+                    {
+                      "key": "minCapacity",
+                      "value": "50"
+                    },
+                    {
+                      "key": "maxCapacity",
+                      "value": "200"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Search completed\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\",\n      \"capacity\": 150,\n      \"pricePerHour\": 250.00,\n      \"amenities\": {\n        \"wifi\": true,\n        \"projector\": true,\n        \"airConditioning\": true,\n        \"parking\": true,\n        \"catering\": false\n      },\n      \"images\": [\n        \"https://example.com/venue1.jpg\"\n      ],\n      \"vendor\": {\n        \"firstName\": \"Jane\",\n        \"lastName\": \"Smith\"\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Venue (Vendor/Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data && response.data.id) {",
+                  "        pm.collectionVariables.set('venue_id', response.data.id);",
+                  "        console.log('Venue ID saved to collection variable');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Grand Conference Hall\",\n  \"location\": \"123 Business District, New York, NY\",\n  \"capacity\": 150,\n  \"pricePerHour\": 250.00,\n  \"amenities\": {\n    \"wifi\": true,\n    \"projector\": true,\n    \"airConditioning\": true,\n    \"parking\": true,\n    \"catering\": false,\n    \"soundSystem\": true,\n    \"whiteboard\": true\n  },\n  \"availability\": {\n    \"monday\": \"09:00-18:00\",\n    \"tuesday\": \"09:00-18:00\",\n    \"wednesday\": \"09:00-18:00\",\n    \"thursday\": \"09:00-18:00\",\n    \"friday\": \"09:00-18:00\",\n    \"saturday\": \"10:00-16:00\",\n    \"sunday\": \"closed\"\n  },\n  \"images\": [\n    \"https://example.com/venue1.jpg\",\n    \"https://example.com/venue2.jpg\",\n    \"https://example.com/venue3.jpg\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues"]
+            },
+            "description": "Create a new venue (requires VENDOR or ADMIN role)"
+          },
+          "response": [
+            {
+              "name": "✅ Venue Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Grand Conference Hall\",\n  \"location\": \"123 Business District, New York, NY\",\n  \"capacity\": 150,\n  \"pricePerHour\": 250.00,\n  \"amenities\": {\n    \"wifi\": true,\n    \"projector\": true,\n    \"airConditioning\": true,\n    \"parking\": true,\n    \"catering\": false\n  },\n  \"availability\": {\n    \"monday\": \"09:00-18:00\",\n    \"tuesday\": \"09:00-18:00\",\n    \"wednesday\": \"09:00-18:00\",\n    \"thursday\": \"09:00-18:00\",\n    \"friday\": \"09:00-18:00\",\n    \"saturday\": \"10:00-16:00\",\n    \"sunday\": \"closed\"\n  },\n  \"images\": [\n    \"https://example.com/venue1.jpg\",\n    \"https://example.com/venue2.jpg\"\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Venue created successfully\",\n  \"data\": {\n    \"id\": 3,\n    \"createdAt\": \"2026-01-26T22:00:00\",\n    \"updatedAt\": \"2026-01-26T22:00:00\",\n    \"name\": \"Grand Conference Hall\",\n    \"location\": \"123 Business District, New York, NY\",\n    \"capacity\": 150,\n    \"pricePerHour\": 250.00,\n    \"amenities\": {\n      \"wifi\": true,\n      \"projector\": true,\n      \"airConditioning\": true,\n      \"parking\": true,\n      \"catering\": false,\n      \"soundSystem\": true,\n      \"whiteboard\": true\n    },\n    \"availability\": {\n      \"monday\": \"09:00-18:00\",\n      \"tuesday\": \"09:00-18:00\",\n      \"wednesday\": \"09:00-18:00\",\n      \"thursday\": \"09:00-18:00\",\n      \"friday\": \"09:00-18:00\",\n      \"saturday\": \"10:00-16:00\",\n      \"sunday\": \"closed\"\n    },\n    \"images\": [\n      \"https://example.com/venue1.jpg\",\n      \"https://example.com/venue2.jpg\",\n      \"https://example.com/venue3.jpg\"\n    ],\n    \"vendor\": {\n      \"id\": 2,\n      \"firstName\": \"Jane\",\n      \"lastName\": \"Smith\",\n      \"email\": \"vendor@example.com\"\n    }\n  }\n}"
+            },
+            {
+              "name": "❌ Unauthorized (USER role)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Venue\",\n  \"location\": \"Test Location\",\n  \"capacity\": 50,\n  \"pricePerHour\": 100.00\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues"]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Access denied. Vendor or Admin role required.\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Venues (Vendor/Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues/my-venues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues", "my-venues"]
+            },
+            "description": "Get all venues owned by the current vendor"
+          },
+          "response": [
+            {
+              "name": "✅ My Venues Retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/venues/my-venues",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "venues", "my-venues"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Venues retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\",\n      \"capacity\": 150,\n      \"pricePerHour\": 250.00,\n      \"createdAt\": \"2026-01-26T20:00:00\",\n      \"updatedAt\": \"2026-01-26T20:00:00\",\n      \"totalBookings\": 15,\n      \"activeBookings\": 3,\n      \"monthlyRevenue\": 3750.00\n    },\n    {\n      \"id\": 3,\n      \"name\": \"Executive Meeting Room\",\n      \"location\": \"456 Corporate Plaza, New York, NY\",\n      \"capacity\": 25,\n      \"pricePerHour\": 120.00,\n      \"createdAt\": \"2026-01-25T15:30:00\",\n      \"updatedAt\": \"2026-01-26T10:15:00\",\n      \"totalBookings\": 8,\n      \"activeBookings\": 1,\n      \"monthlyRevenue\": 960.00\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+   
+ {
+      "name": "📅 Bookings",
+      "description": "Booking management and availability checking",
+      "item": [
+        {
+          "name": "Check Venue Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings/availability/{{venue_id}}?startTime=2026-02-15T10:00:00&endTime=2026-02-15T14:00:00",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings", "availability", "{{venue_id}}"],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": "2026-02-15T10:00:00",
+                  "description": "Start time in ISO format"
+                },
+                {
+                  "key": "endTime",
+                  "value": "2026-02-15T14:00:00",
+                  "description": "End time in ISO format"
+                }
+              ]
+            },
+            "description": "Check if a venue is available for the specified time period"
+          },
+          "response": [
+            {
+              "name": "✅ Available",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/availability/1?startTime=2026-02-15T10:00:00&endTime=2026-02-15T14:00:00",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "availability", "1"],
+                  "query": [
+                    {
+                      "key": "startTime",
+                      "value": "2026-02-15T10:00:00"
+                    },
+                    {
+                      "key": "endTime",
+                      "value": "2026-02-15T14:00:00"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Availability checked\",\n  \"data\": true\n}"
+            },
+            {
+              "name": "❌ Not Available",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/availability/1?startTime=2026-02-15T14:00:00&endTime=2026-02-15T18:00:00",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "availability", "1"],
+                  "query": [
+                    {
+                      "key": "startTime",
+                      "value": "2026-02-15T14:00:00"
+                    },
+                    {
+                      "key": "endTime",
+                      "value": "2026-02-15T18:00:00"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Availability checked\",\n  \"data\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data && response.data.id) {",
+                  "        pm.collectionVariables.set('booking_id', response.data.id);",
+                  "        console.log('Booking ID saved to collection variable');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": {{venue_id}},\n  \"startDateTime\": \"2026-02-15T10:00:00\",\n  \"endDateTime\": \"2026-02-15T14:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings"]
+            },
+            "description": "Create a new booking for a venue"
+          },
+          "response": [
+            {
+              "name": "✅ Booking Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"venueId\": 1,\n  \"startDateTime\": \"2026-02-15T10:00:00\",\n  \"endDateTime\": \"2026-02-15T14:00:00\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Booking created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"createdAt\": \"2026-01-26T22:15:00\",\n    \"updatedAt\": \"2026-01-26T22:15:00\",\n    \"startDateTime\": \"2026-02-15T10:00:00\",\n    \"endDateTime\": \"2026-02-15T14:00:00\",\n    \"status\": \"PENDING\",\n    \"totalAmount\": 1000.00,\n    \"venue\": {\n      \"id\": 1,\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\",\n      \"pricePerHour\": 250.00\n    },\n    \"user\": {\n      \"id\": 1,\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"user@example.com\"\n    }\n  }\n}"
+            },
+            {
+              "name": "❌ Venue Not Available",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"venueId\": 1,\n  \"startDateTime\": \"2026-02-15T14:00:00\",\n  \"endDateTime\": \"2026-02-15T18:00:00\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Venue is not available for the selected time period\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings/my-bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings", "my-bookings"]
+            },
+            "description": "Get all bookings for the current authenticated user"
+          },
+          "response": [
+            {
+              "name": "✅ My Bookings Retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/my-bookings",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "my-bookings"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Bookings retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"createdAt\": \"2026-01-26T22:15:00\",\n      \"updatedAt\": \"2026-01-26T22:15:00\",\n      \"startDateTime\": \"2026-02-15T10:00:00\",\n      \"endDateTime\": \"2026-02-15T14:00:00\",\n      \"status\": \"CONFIRMED\",\n      \"totalAmount\": 1000.00,\n      \"venue\": {\n        \"id\": 1,\n        \"name\": \"Grand Conference Hall\",\n        \"location\": \"123 Business District, New York, NY\",\n        \"pricePerHour\": 250.00,\n        \"images\": [\"https://example.com/venue1.jpg\"]\n      }\n    },\n    {\n      \"id\": 2,\n      \"createdAt\": \"2026-01-25T14:30:00\",\n      \"updatedAt\": \"2026-01-25T14:30:00\",\n      \"startDateTime\": \"2026-02-20T09:00:00\",\n      \"endDateTime\": \"2026-02-20T12:00:00\",\n      \"status\": \"PENDING\",\n      \"totalAmount\": 540.00,\n      \"venue\": {\n        \"id\": 2,\n        \"name\": \"Rooftop Event Space\",\n        \"location\": \"456 Downtown Ave, Los Angeles, CA\",\n        \"pricePerHour\": 180.00,\n        \"images\": [\"https://example.com/rooftop1.jpg\"]\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Venue Bookings (Vendor/Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings/venue/{{venue_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings", "venue", "{{venue_id}}"]
+            },
+            "description": "Get all bookings for a specific venue (vendor/admin only)"
+          },
+          "response": [
+            {
+              "name": "✅ Venue Bookings Retrieved",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/venue/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "venue", "1"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Venue bookings retrieved successfully\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"createdAt\": \"2026-01-26T22:15:00\",\n      \"updatedAt\": \"2026-01-26T22:15:00\",\n      \"startDateTime\": \"2026-02-15T10:00:00\",\n      \"endDateTime\": \"2026-02-15T14:00:00\",\n      \"status\": \"CONFIRMED\",\n      \"totalAmount\": 1000.00,\n      \"user\": {\n        \"id\": 1,\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"email\": \"user@example.com\",\n        \"phoneNumber\": \"+1234567890\"\n      }\n    },\n    {\n      \"id\": 3,\n      \"createdAt\": \"2026-01-24T16:45:00\",\n      \"updatedAt\": \"2026-01-24T16:45:00\",\n      \"startDateTime\": \"2026-02-18T13:00:00\",\n      \"endDateTime\": \"2026-02-18T17:00:00\",\n      \"status\": \"PENDING\",\n      \"totalAmount\": 1000.00,\n      \"user\": {\n        \"id\": 4,\n        \"firstName\": \"Alice\",\n        \"lastName\": \"Johnson\",\n        \"email\": \"alice@company.com\",\n        \"phoneNumber\": \"+1987654321\"\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Booking Status - Confirm (Vendor/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings/{{booking_id}}/status?status=CONFIRMED",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings", "{{booking_id}}", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "CONFIRMED",
+                  "description": "New booking status: PENDING, CONFIRMED, CANCELLED"
+                }
+              ]
+            },
+            "description": "Update booking status (vendor/admin only)"
+          },
+          "response": [
+            {
+              "name": "✅ Status Updated to Confirmed",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/1/status?status=CONFIRMED",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "1", "status"],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "CONFIRMED"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Booking status updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"createdAt\": \"2026-01-26T22:15:00\",\n    \"updatedAt\": \"2026-01-26T22:30:00\",\n    \"startDateTime\": \"2026-02-15T10:00:00\",\n    \"endDateTime\": \"2026-02-15T14:00:00\",\n    \"status\": \"CONFIRMED\",\n    \"totalAmount\": 1000.00,\n    \"venue\": {\n      \"id\": 1,\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\"\n    },\n    \"user\": {\n      \"id\": 1,\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"user@example.com\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Booking Status - Cancel (Vendor/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings/{{booking_id}}/status?status=CANCELLED",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings", "{{booking_id}}", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "CANCELLED",
+                  "description": "Cancel the booking"
+                }
+              ]
+            },
+            "description": "Cancel a booking (vendor/admin only)"
+          },
+          "response": [
+            {
+              "name": "✅ Status Updated to Cancelled",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{jwt_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/bookings/1/status?status=CANCELLED",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "bookings", "1", "status"],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "CANCELLED"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Booking status updated successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"createdAt\": \"2026-01-26T22:15:00\",\n    \"updatedAt\": \"2026-01-26T22:35:00\",\n    \"startDateTime\": \"2026-02-15T10:00:00\",\n    \"endDateTime\": \"2026-02-15T14:00:00\",\n    \"status\": \"CANCELLED\",\n    \"totalAmount\": 1000.00,\n    \"venue\": {\n      \"id\": 1,\n      \"name\": \"Grand Conference Hall\",\n      \"location\": \"123 Business District, New York, NY\"\n    },\n    \"user\": {\n      \"id\": 1,\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"user@example.com\"\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🔧 System",
+      "description": "System health and API information",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actuator/health",
+              "host": ["{{base_url}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Check API health status"
+          },
+          "response": [
+            {
+              "name": "✅ Healthy",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/actuator/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["actuator", "health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"UP\",\n  \"groups\": [\"liveness\", \"readiness\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "API Documentation (Swagger)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/swagger-ui.html",
+              "host": ["{{base_url}}"],
+              "path": ["swagger-ui.html"]
+            },
+            "description": "Access interactive API documentation"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

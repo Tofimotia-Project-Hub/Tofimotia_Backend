@@ -1,7 +1,8 @@
 {
   "info": {
-    "name": "Tofimotia API Collection",
-    "description": "Complete API collection for testing Tofimotia venue booking platform",
+    "name": "Tofimotia API - Venue Booking Platform",
+    "description": "Complete API documentation for Tofimotia - A comprehensive venue booking platform that allows users to discover, book, and manage venue reservations. This collection includes all endpoints for authentication, user management, venue operations, and booking functionality.\n\n## Features:\n- User registration and authentication with JWT tokens\n- Role-based access control (USER, VENDOR, ADMIN)\n- Venue management and search capabilities\n- Booking system with availability checking\n- Real-time booking status updates\n\n## Base URL: https://tofimotia-backend.onrender.com\n\n## Authentication:\nMost endpoints require JWT authentication. After login, the token is automatically saved and used for subsequent requests.\n\n## Getting Started:\n1. Register a new user account\n2. Login to get JWT token\n3. Explore venues and create bookings\n4. Manage your bookings and profile",
+    "version": "1.0.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -18,7 +19,8 @@
     {
       "key": "base_url",
       "value": "https://tofimotia-backend.onrender.com",
-      "type": "string"
+      "type": "string",
+      "description": "Base URL for the Tofimotia API"
     },
     {
       "key": "jwt_token",
@@ -63,9 +65,73 @@
               "raw": "{{base_url}}/api/v1/auth/register",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "auth", "register"]
-            }
+            },
+            "description": "Register a new user account. Available roles: USER, VENDOR, ADMIN"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Successful Registration",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"role\": \"USER\",\n  \"profileData\": {\n    \"preferences\": \"outdoor venues\",\n    \"company\": \"Tech Corp\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User registered successfully\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY5NDYzMjg3LCJleHAiOjE3Njk1NDk2ODd9.wjh2bpzi4k77eUKw_9EjCWZiof1Wlh-HFQjQ5i1Yb6o\",\n    \"type\": \"Bearer\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": \"USER\"\n  }\n}"
+            },
+            {
+              "name": "Email Already Exists",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"existing@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"role\": \"USER\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "register"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Email already exists\",\n  \"data\": null\n}"
+            }
+          ]
         },
         {
           "name": "Register Vendor",
@@ -146,9 +212,73 @@
               "raw": "{{base_url}}/api/v1/auth/login",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "auth", "login"]
-            }
+            },
+            "description": "Authenticate user and receive JWT token for subsequent requests"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Successful Login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY5NDYzNDE4LCJleHAiOjE3Njk1NDk4MTh9.KHd9dFxL5H0ehrOrroqwtj2paBTI8qWNcKh5iH_TliA\",\n    \"type\": \"Bearer\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": \"USER\"\n  }\n}"
+            },
+            {
+              "name": "Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "auth", "login"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid credentials\",\n  \"data\": null\n}"
+            }
+          ]
         }
       ]
     },
