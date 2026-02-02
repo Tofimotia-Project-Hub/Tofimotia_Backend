@@ -21,6 +21,19 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping
+    @Operation(summary = "Get all users")
+    public ResponseEntity<ApiResponse<java.util.List<User>>> getAllUsers() {
+        try {
+            java.util.List<User> users = userRepository.findAll();
+            // Don't return passwords
+            users.forEach(user -> user.setPassword(null));
+            return ResponseEntity.ok(ApiResponse.success("Users retrieved successfully", users));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
     @GetMapping("/profile")
     @Operation(summary = "Get current user profile")
     public ResponseEntity<ApiResponse<User>> getProfile() {
