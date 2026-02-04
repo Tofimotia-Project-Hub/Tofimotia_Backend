@@ -1,6 +1,6 @@
 package com.hub.tofimotia.services;
 
-import com.hub.tofimotia.enums.BookingStatus;
+import com.hub.tofimotia.models.BookingStatus;
 import com.hub.tofimotia.enums.PaymentStatus;
 import com.hub.tofimotia.models.Bookings;
 import com.hub.tofimotia.models.Payment;
