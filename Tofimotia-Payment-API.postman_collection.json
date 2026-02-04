@@ -1,0 +1,251 @@
+{
+  "info": {
+    "name": "Tofimotia Payment API",
+    "description": "Collection for testing Tofimotia payment endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://your-deployed-app.com",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_reference",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.token) {",
+                  "        pm.collectionVariables.set('jwt_token', response.data.token);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Initiate Payment (Success)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.reference) {",
+                  "        pm.collectionVariables.set('payment_reference', response.data.reference);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingId\": 1,\n  \"amount\": 200000.00,\n  \"paymentMethod\": \"MOCK_PAYMENT\",\n  \"cardNumber\": \"4084084084084081\",\n  \"expiryMonth\": \"12\",\n  \"expiryYear\": \"2025\",\n  \"cvv\": \"123\",\n  \"cardHolderName\": \"Test User\",\n  \"customerEmail\": \"testuser@example.com\",\n  \"customerPhone\": \"+2348012345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/initiate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "initiate"]
+            }
+          }
+        },
+        {
+          "name": "Initiate Payment (Failure)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingId\": 1,\n  \"amount\": 100000.00,\n  \"paymentMethod\": \"MOCK_PAYMENT\",\n  \"cardNumber\": \"4084084084084000\",\n  \"expiryMonth\": \"12\",\n  \"expiryYear\": \"2025\",\n  \"cvv\": \"123\",\n  \"cardHolderName\": \"Test User\",\n  \"customerEmail\": \"testuser@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/initiate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "initiate"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/verify/{{payment_reference}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "verify", "{{payment_reference}}"]
+            }
+          }
+        },
+        {
+          "name": "Get My Payments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/my-payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "my-payments"]
+            }
+          }
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/1/refund?reason=Customer requested cancellation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "1", "refund"],
+              "query": [
+                {
+                  "key": "reason",
+                  "value": "Customer requested cancellation"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Venues",
+      "item": [
+        {
+          "name": "Create Test Venue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Event Hall\",\n  \"location\": \"Lagos, Nigeria\",\n  \"capacity\": 100,\n  \"pricePerHour\": 50000,\n  \"amenities\": [\"WiFi\", \"Parking\", \"AC\"],\n  \"description\": \"Beautiful event hall for testing\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/venues",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "venues"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Test Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venueId\": 1,\n  \"startDateTime\": \"2026-03-15T10:00:00\",\n  \"endDateTime\": \"2026-03-15T14:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "bookings"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

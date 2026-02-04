@@ -1,5 +1,7 @@
 package com.hub.tofimotia.models;
 
+import com.hub.tofimotia.enums.PaymentMethod;
+import com.hub.tofimotia.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,15 +18,26 @@ public class Payment extends BaseEntity {
     @JoinColumn(name = "booking_id")
     private Bookings booking;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
     
-    @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
     
-    @Column(name = "payment_method")
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
     
     @Column(name = "transaction_id")
     private String transactionId;
+    
+    @Column(name = "reference")
+    private String reference;
+    
+    @Column(name = "gateway_response")
+    private String gatewayResponse;
+    
+    @Column(name = "failure_reason")
+    private String failureReason;
 }
