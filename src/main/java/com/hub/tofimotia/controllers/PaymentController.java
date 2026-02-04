@@ -32,7 +32,7 @@ public class PaymentController {
             @Valid @RequestBody PaymentRequest request) {
         
         PaymentResponse response = paymentService.initiatePayment(request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Payment initiated successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Payment initiated successfully", response));
     }
     
     @GetMapping("/verify/{reference}")
@@ -43,7 +43,7 @@ public class PaymentController {
             @PathVariable String reference) {
         
         PaymentResponse response = paymentService.verifyPayment(reference);
-        return ResponseEntity.ok(ApiResponse.success(response, "Payment verification completed"));
+        return ResponseEntity.ok(ApiResponse.success("Payment verification completed", response));
     }
     
     @PostMapping("/{paymentId}/refund")
@@ -55,7 +55,7 @@ public class PaymentController {
             @RequestParam String reason) {
         
         PaymentResponse response = paymentService.processRefund(paymentId, reason);
-        return ResponseEntity.ok(ApiResponse.success(response, "Refund processed successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Refund processed successfully", response));
     }
     
     @GetMapping("/my-payments")
@@ -68,7 +68,7 @@ public class PaymentController {
         // Extract user ID from authentication (you'll need to implement this based on your JWT setup)
         Long userId = extractUserIdFromAuth(authentication);
         List<PaymentResponse> payments = paymentService.getUserPayments(userId);
-        return ResponseEntity.ok(ApiResponse.success(payments, "User payments retrieved successfully"));
+        return ResponseEntity.ok(ApiResponse.success("User payments retrieved successfully", payments));
     }
     
     @GetMapping("/vendor-payments")
@@ -80,7 +80,7 @@ public class PaymentController {
         
         Long vendorId = extractUserIdFromAuth(authentication);
         List<PaymentResponse> payments = paymentService.getVendorPayments(vendorId);
-        return ResponseEntity.ok(ApiResponse.success(payments, "Vendor payments retrieved successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Vendor payments retrieved successfully", payments));
     }
     
     @GetMapping("/reference/{reference}")
@@ -91,7 +91,7 @@ public class PaymentController {
             @PathVariable String reference) {
         
         PaymentResponse response = paymentService.getPaymentByReference(reference);
-        return ResponseEntity.ok(ApiResponse.success(response, "Payment details retrieved successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Payment details retrieved successfully", response));
     }
     
     // Mock webhook endpoint for testing
